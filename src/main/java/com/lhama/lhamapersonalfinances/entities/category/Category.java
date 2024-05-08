@@ -98,4 +98,10 @@ public class Category {
                 ", user=" + user +
                 '}';
     }
+
+    public void updateCategory(CategoryUpdateDTO categoryUpdateData){
+        if (categoryUpdateData != null){
+            this.name = categoryUpdateData.name();
+        }
+    }
 }

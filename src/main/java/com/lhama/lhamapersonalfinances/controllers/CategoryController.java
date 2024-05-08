@@ -1,9 +1,6 @@
 package com.lhama.lhamapersonalfinances.controllers;
 
-import com.lhama.lhamapersonalfinances.entities.category.Category;
-import com.lhama.lhamapersonalfinances.entities.category.CategoryDTO;
-import com.lhama.lhamapersonalfinances.entities.category.CategoryRegisterCreatedByUserDTO;
-import com.lhama.lhamapersonalfinances.entities.category.CategoryRegisterDTO;
+import com.lhama.lhamapersonalfinances.entities.category.*;
 import com.lhama.lhamapersonalfinances.repositorys.CategoryRespository;
 import com.lhama.lhamapersonalfinances.services.CategoryService;
 import jakarta.transaction.Transactional;
@@ -49,5 +46,16 @@ public class CategoryController {
         URI uri = uriBuilder.path("register/category/{id}").buildAndExpand(newCategoryId).toUri();
 
         return ResponseEntity.created(uri).body(new CategoryDTO(newCategory));
+    }
+
+    @PutMapping("update")
+    @Transactional
+    public ResponseEntity<CategoryDTO> updateCategoryById(@RequestBody CategoryUpdateDTO categoryUpdateData){
+        if (categoryUpdateData == null){
+            return ResponseEntity.badRequest().build();
+        }
+
+        Category updatedCategory = categoryService.updateCategoryById(categoryUpdateData);
+        return ResponseEntity.ok(new CategoryDTO(updatedCategory));
     }
 }

@@ -1,8 +1,6 @@
 package com.lhama.lhamapersonalfinances.services;
 
-import com.lhama.lhamapersonalfinances.entities.category.Category;
-import com.lhama.lhamapersonalfinances.entities.category.CategoryRegisterCreatedByUserDTO;
-import com.lhama.lhamapersonalfinances.entities.category.CategoryRegisterDTO;
+import com.lhama.lhamapersonalfinances.entities.category.*;
 import com.lhama.lhamapersonalfinances.entities.user.User;
 import com.lhama.lhamapersonalfinances.repositorys.CategoryRespository;
 import com.lhama.lhamapersonalfinances.repositorys.UserRepository;
@@ -30,6 +28,13 @@ public class CategoryService {
         newCategory = categoryRespository.save(newCategory);
 
         return newCategory;
+    }
+
+    public Category updateCategoryById(CategoryUpdateDTO categoryUpdateData){
+        Category updatedCategory = categoryRespository.getReferenceById(categoryUpdateData.idCategory());
+        updatedCategory.updateCategory(categoryUpdateData);
+        return updatedCategory;
+
     }
 
 }
