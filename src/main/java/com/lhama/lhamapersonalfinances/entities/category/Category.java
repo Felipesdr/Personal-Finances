@@ -1,5 +1,6 @@
 package com.lhama.lhamapersonalfinances.entities.category;
 
+import com.lhama.lhamapersonalfinances.entities.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -12,14 +13,17 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idCategory;
 
-    @NotNull(message = "O nome não pode ser nulo")
-    @NotBlank(message = "O nome não pode estar vazio")
+    @NotNull
+    @NotBlank
     @Column(length = 512)
     private String name;
 
-    @NotNull(message = "O nome não pode ser nulo")
-    @NotBlank(message = "O nome não pode estar vazio")
+    @NotNull
     private boolean active;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_user", referencedColumnName = "idUser")
+    private User user;
 
     public Category() {
     }
@@ -33,6 +37,12 @@ public class Category {
     public Category(CategoryRegisterDTO categoryRegisterDTO){
         this.name = categoryRegisterDTO.name();
         this.active = true;
+    }
+
+    public Category(CategoryRegisterCreatedByUserDTO categoryRegisterDTO, User user){
+        this.name = categoryRegisterDTO.name();
+        this.active = true;
+        this.user = user;
     }
 
     public Integer getIdCategory() {
@@ -59,6 +69,14 @@ public class Category {
         this.active = active;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -69,5 +87,15 @@ public class Category {
     @Override
     public int hashCode() {
         return Objects.hash(getIdCategory());
+    }
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "idCategory=" + idCategory +
+                ", name='" + name + '\'' +
+                ", active=" + active +
+                ", user=" + user +
+                '}';
     }
 }
