@@ -21,7 +21,7 @@ public class Category {
     @NotNull
     private boolean active;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "id_user", referencedColumnName = "idUser")
     private User user;
 
