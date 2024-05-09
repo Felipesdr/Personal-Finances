@@ -1,7 +1,6 @@
 package com.lhama.lhamapersonalfinances.controllers;
 
 import com.lhama.lhamapersonalfinances.entities.category.*;
-import com.lhama.lhamapersonalfinances.repositorys.CategoryRespository;
 import com.lhama.lhamapersonalfinances.services.CategoryService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("category")
@@ -48,6 +48,20 @@ public class CategoryController {
         return ResponseEntity.created(uri).body(new CategoryDTO(newCategory));
     }
 
+    @GetMapping("/{idUser}")
+    public ResponseEntity<List<CategoryDTO>> getAllCategoryByIdUserAndGlobal(@PathVariable Integer idUser){
+        if (idUser == null){
+            return ResponseEntity.badRequest().build();
+        }
+
+        List<Category> temp = categoryService.getAllCategoryByIdUserAndGlobal(idUser);
+        List<CategoryDTO> categorys = temp.stream().map(c -> new CategoryDTO((Category) c)).toList();
+
+        return ResponseEntity.ok().body(categorys);
+
+    }
+
+
     @PutMapping("update")
     @Transactional
     public ResponseEntity<CategoryDTO> updateCategoryById(@RequestBody CategoryUpdateDTO categoryUpdateData){
@@ -58,4 +72,6 @@ public class CategoryController {
         Category updatedCategory = categoryService.updateCategoryById(categoryUpdateData);
         return ResponseEntity.ok(new CategoryDTO(updatedCategory));
     }
+
+
 }
