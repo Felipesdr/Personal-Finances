@@ -104,4 +104,10 @@ public class Category {
             this.name = categoryUpdateData.name();
         }
     }
+
+    public void deactivateCategory(){
+        if(idCategory != null){
+            this.active = false;
+        }
+    }
 }
