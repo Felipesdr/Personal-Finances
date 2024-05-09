@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class CategoryService {
@@ -35,7 +36,7 @@ public class CategoryService {
     public List<Category> getAllCategoryByIdUserAndGlobal(Integer idUser){
         User user = userRepository.findById(idUser).orElseThrow();
 
-       return categoryRepository.findAllByUserOrUserIsNullAndActiveTrue(user);
+       return categoryRepository.findAllByUserAndActiveTrueOrUserIsNull(user);
     }
 
     public Category updateCategoryById(CategoryUpdateDTO categoryUpdateData){
@@ -43,6 +44,16 @@ public class CategoryService {
         updatedCategory.updateCategory(categoryUpdateData);
         return updatedCategory;
 
+    }
+
+    public void deactivateCategoryCreatedByUserById(CategoryDeactivateDTO categoryDeactivateData){
+        if(categoryDeactivateData.idUser() != null){
+            Category deactivatedCategory = categoryRepository.getReferenceById(categoryDeactivateData.idCategory());
+
+            if(Objects.equals(deactivatedCategory.getUser().getIdUser(), categoryDeactivateData.idUser())){
+                deactivatedCategory.deactivateCategory();
+            }
+        }
     }
 
 }
