@@ -36,7 +36,7 @@ public class CategoryService {
     public List<Category> getAllCategoryByIdUserAndGlobal(Integer idUser){
         User user = userRepository.findById(idUser).orElseThrow();
 
-       return categoryRepository.findAllByUserAndActiveTrueOrUserIsNull(user);
+       return categoryRepository.findAllByUserAndActiveTrueOrUserIsNullAndActiveTrue(user);
     }
 
     public Category updateCategoryById(CategoryUpdateDTO categoryUpdateData){
@@ -54,6 +54,11 @@ public class CategoryService {
                 deactivatedCategory.deactivateCategory();
             }
         }
+    }
+
+    public void deactivateGlobalCategory(Integer idCategory){
+        Category deactivatedGlobalCategory = categoryRepository.getReferenceById(idCategory);
+        deactivatedGlobalCategory.deactivateCategory();
     }
 
 }
