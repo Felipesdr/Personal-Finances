@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
-    public List<Category> findAllByUserOrUserIsNullAndActiveTrue(User user);
+    public List<Category> findAllByUserAndActiveTrueOrUserIsNull(User user);
 
 }
