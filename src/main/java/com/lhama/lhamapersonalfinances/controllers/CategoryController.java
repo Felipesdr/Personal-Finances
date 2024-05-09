@@ -73,5 +73,14 @@ public class CategoryController {
         return ResponseEntity.ok(new CategoryDTO(updatedCategory));
     }
 
+    @DeleteMapping("deactivate")
+    @Transactional
+    public ResponseEntity deactivateCategoryCreatedByUserById(@RequestBody CategoryDeactivateDTO categoryDeactivateData){
+        if(categoryDeactivateData == null){
+            return ResponseEntity.badRequest().build();
+        }
 
+        categoryService.deactivateCategoryCreatedByUserById(categoryDeactivateData);
+        return ResponseEntity.noContent().build();
+    }
 }
