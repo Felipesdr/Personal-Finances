@@ -83,4 +83,15 @@ public class CategoryController {
         categoryService.deactivateCategoryCreatedByUserById(categoryDeactivateData);
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping("deactivate/{idCategory}")
+    @Transactional
+    public ResponseEntity deactivateGlobalCategory(@PathVariable Integer idCategory){
+        if(idCategory == null){
+            return ResponseEntity.badRequest().build();
+        }
+
+        categoryService.deactivateGlobalCategory(idCategory);
+        return ResponseEntity.noContent().build();
+    }
 }
