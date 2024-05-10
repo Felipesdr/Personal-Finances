@@ -1,9 +1,9 @@
-package com.lhama.lhamapersonalfinances.services;
+package com.lhama.lhamapersonalfinances.model.services;
 
-import com.lhama.lhamapersonalfinances.entities.category.*;
-import com.lhama.lhamapersonalfinances.entities.user.User;
-import com.lhama.lhamapersonalfinances.repositorys.CategoryRepository;
-import com.lhama.lhamapersonalfinances.repositorys.UserRepository;
+import com.lhama.lhamapersonalfinances.model.entities.category.*;
+import com.lhama.lhamapersonalfinances.model.entities.user.User;
+import com.lhama.lhamapersonalfinances.model.repositorys.CategoryRepository;
+import com.lhama.lhamapersonalfinances.model.repositorys.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

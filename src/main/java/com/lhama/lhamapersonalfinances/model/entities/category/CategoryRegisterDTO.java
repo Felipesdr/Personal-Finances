@@ -1,4 +1,4 @@
-package com.lhama.lhamapersonalfinances.entities.category;
+package com.lhama.lhamapersonalfinances.model.entities.category;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import jakarta.validation.constraints.NotBlank;

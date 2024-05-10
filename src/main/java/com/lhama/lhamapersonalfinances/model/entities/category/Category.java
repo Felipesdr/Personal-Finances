@@ -1,6 +1,6 @@
-package com.lhama.lhamapersonalfinances.entities.category;
+package com.lhama.lhamapersonalfinances.model.entities.category;
 
-import com.lhama.lhamapersonalfinances.entities.user.User;
+import com.lhama.lhamapersonalfinances.model.entities.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

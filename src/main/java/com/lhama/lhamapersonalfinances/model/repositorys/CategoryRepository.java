@@ -1,7 +1,7 @@
-package com.lhama.lhamapersonalfinances.repositorys;
+package com.lhama.lhamapersonalfinances.model.repositorys;
 
-import com.lhama.lhamapersonalfinances.entities.category.Category;
-import com.lhama.lhamapersonalfinances.entities.user.User;
+import com.lhama.lhamapersonalfinances.model.entities.category.Category;
+import com.lhama.lhamapersonalfinances.model.entities.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

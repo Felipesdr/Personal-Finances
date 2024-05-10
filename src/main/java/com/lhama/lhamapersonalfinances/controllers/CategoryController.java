@@ -1,7 +1,7 @@
 package com.lhama.lhamapersonalfinances.controllers;
 
-import com.lhama.lhamapersonalfinances.entities.category.*;
-import com.lhama.lhamapersonalfinances.services.CategoryService;
+import com.lhama.lhamapersonalfinances.model.entities.category.*;
+import com.lhama.lhamapersonalfinances.model.services.CategoryService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
