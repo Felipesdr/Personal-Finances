@@ -1,5 +1,7 @@
 package com.lhama.lhamapersonalfinances.controllers;
 
+import com.lhama.lhamapersonalfinances.infra.security.LoginResponseDTO;
+import com.lhama.lhamapersonalfinances.infra.security.TokenService;
 import com.lhama.lhamapersonalfinances.model.entities.user.User;
 import com.lhama.lhamapersonalfinances.model.entities.user.UserAuthenticationDTO;
 import com.lhama.lhamapersonalfinances.model.entities.user.UserDTO;
@@ -29,12 +31,17 @@ public class AuthenticationController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    TokenService tokenService;
+
     @PostMapping("login")
     public ResponseEntity login(@RequestBody @Valid UserAuthenticationDTO userAuthenticationData){
         var userNamePassword = new UsernamePasswordAuthenticationToken(userAuthenticationData.email(), userAuthenticationData.password());
         var auth = authManager.authenticate(userNamePassword);
 
-        return ResponseEntity.ok().build();
+        var token = tokenService.generateToken((User) auth.getPrincipal());
+
+        return ResponseEntity.ok(new LoginResponseDTO(token));
     }
 
     @PostMapping("register")
