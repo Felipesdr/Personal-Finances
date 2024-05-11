@@ -12,4 +12,6 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
     public List<Category> findAllByUserAndActiveTrueOrUserIsNullAndActiveTrue(User user);
 
+    public boolean existsByNameAndActiveTrue(String name);
+
 }
