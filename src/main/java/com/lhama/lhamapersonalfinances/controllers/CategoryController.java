@@ -1,5 +1,6 @@
 package com.lhama.lhamapersonalfinances.controllers;
 
+import com.lhama.lhamapersonalfinances.infra.exception.ValidationException;
 import com.lhama.lhamapersonalfinances.model.entities.category.*;
 import com.lhama.lhamapersonalfinances.model.services.CategoryService;
 import jakarta.transaction.Transactional;
@@ -19,27 +20,21 @@ public class CategoryController {
 
     @PostMapping("register")
     @Transactional
-    public ResponseEntity<CategoryDTO> registerCategory(@RequestBody CategoryRegisterDTO categoryRegisterData, UriComponentsBuilder uriBuilder){
-
-        if (categoryRegisterData == null){
-            return ResponseEntity.badRequest().build();
+    public ResponseEntity registerGlobalCategory(@RequestBody CategoryRegisterDTO categoryRegisterData, UriComponentsBuilder uriBuilder){
+        try{
+            Category newCategory = categoryService.registerGlobalCategory(categoryRegisterData);
+            Integer newCategoryId = newCategory.getIdCategory();
+            URI uri = uriBuilder.path("register/category/{id}").buildAndExpand(newCategoryId).toUri();
+            return ResponseEntity.created(uri).body(new CategoryDTO(newCategory));
+        } catch (ValidationException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
 
-        Category newCategory = categoryService.registerCategory(categoryRegisterData);
-        Integer newCategoryId = newCategory.getIdCategory();
-
-        URI uri = uriBuilder.path("register/category/{id}").buildAndExpand(newCategoryId).toUri();
-
-        return ResponseEntity.created(uri).body(new CategoryDTO(newCategory));
     }
 
     @PostMapping("register-user-created")
     @Transactional
     public ResponseEntity<CategoryDTO> registerCategoryCreatedByUser(@RequestBody CategoryRegisterCreatedByUserDTO categoryRegisterCreatedByUserData, UriComponentsBuilder uriBuilder){
-        if (categoryRegisterCreatedByUserData == null){
-            return ResponseEntity.badRequest().build();
-        }
-
         Category newCategory = categoryService.registerCategoryCreatedByUser(categoryRegisterCreatedByUserData);
         Integer newCategoryId = newCategory.getIdCategory();
 

@@ -1,5 +1,6 @@
 package com.lhama.lhamapersonalfinances.model.services;
 
+import com.lhama.lhamapersonalfinances.infra.exception.ValidationException;
 import com.lhama.lhamapersonalfinances.model.entities.category.*;
 import com.lhama.lhamapersonalfinances.model.entities.user.User;
 import com.lhama.lhamapersonalfinances.model.repositorys.CategoryRepository;
@@ -18,10 +19,17 @@ public class CategoryService {
     @Autowired
     UserRepository userRepository;
 
-    public Category registerCategory(CategoryRegisterDTO categoryRegisterData){
+    public Category registerGlobalCategory(CategoryRegisterDTO categoryRegisterData){
+        if (categoryRegisterData == null){
+            throw new ValidationException("Category register data can't be null");
+        }
+
+        if(categoryRepository.existsByNameAndActiveTrue(categoryRegisterData.name())){
+            throw new ValidationException("Category already exists");
+        }
+
         Category newCategory = new Category(categoryRegisterData);
         newCategory = categoryRepository.save(newCategory);
-
         return newCategory;
     }
 
