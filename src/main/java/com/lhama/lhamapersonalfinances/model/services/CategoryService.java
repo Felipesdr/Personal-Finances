@@ -1,8 +1,10 @@
 package com.lhama.lhamapersonalfinances.model.services;
 
 import com.lhama.lhamapersonalfinances.infra.exception.ValidationException;
+import com.lhama.lhamapersonalfinances.infra.security.TokenService;
 import com.lhama.lhamapersonalfinances.model.entities.category.*;
 import com.lhama.lhamapersonalfinances.model.entities.user.User;
+import com.lhama.lhamapersonalfinances.model.entities.validations.RequestValidations;
 import com.lhama.lhamapersonalfinances.model.repositorys.CategoryRepository;
 import com.lhama.lhamapersonalfinances.model.repositorys.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,28 +15,34 @@ import java.util.Objects;
 
 @Service
 public class CategoryService {
-
     @Autowired
     CategoryRepository categoryRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    TokenService tokenService;
 
     public Category registerGlobalCategory(CategoryRegisterDTO categoryRegisterData){
-        if (categoryRegisterData == null){
-            throw new ValidationException("Category register data can't be null");
-        }
+        RequestValidations.validateNullDTO(categoryRegisterData);
 
         if(categoryRepository.existsByNameAndActiveTrue(categoryRegisterData.name())){
             throw new ValidationException("Category already exists");
         }
 
         Category newCategory = new Category(categoryRegisterData);
+        newCategory.setIdCategory(null);
         newCategory = categoryRepository.save(newCategory);
         return newCategory;
     }
 
-    public Category registerCategoryCreatedByUser(CategoryRegisterCreatedByUserDTO categoryRegisterCreatedByUserData){
-        User user =  userRepository.findById(categoryRegisterCreatedByUserData.idUser()).orElseThrow();
+    public Category registerCategoryCreatedByUser(CategoryRegisterDTO categoryRegisterCreatedByUserData, Integer idUser){
+        RequestValidations.validateNullDTO(categoryRegisterCreatedByUserData);
+
+        if(categoryRepository.existsByNameAndActiveTrue(categoryRegisterCreatedByUserData.name())){
+            throw new ValidationException("Category already exists");
+        }
+
+        User user =  userRepository.findById(idUser).get();
         Category newCategory = new Category(categoryRegisterCreatedByUserData, user);
         newCategory = categoryRepository.save(newCategory);
 
