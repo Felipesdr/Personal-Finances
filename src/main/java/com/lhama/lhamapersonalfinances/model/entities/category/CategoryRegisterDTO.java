@@ -6,5 +6,6 @@ import jakarta.validation.constraints.NotNull;
 
 public record CategoryRegisterDTO(
         @NotNull(message = "Nome da categoria não pode ser nulo")
-        String name) {
+        String name){
+
 }
