@@ -1,10 +1,13 @@
 package com.lhama.lhamapersonalfinances.controllers;
 
 import com.lhama.lhamapersonalfinances.infra.exception.ValidationException;
+import com.lhama.lhamapersonalfinances.infra.exception.ValidationExceptionDTO;
+import com.lhama.lhamapersonalfinances.infra.security.TokenService;
 import com.lhama.lhamapersonalfinances.model.entities.category.*;
 import com.lhama.lhamapersonalfinances.model.services.CategoryService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -17,6 +20,8 @@ import java.util.List;
 public class CategoryController {
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    TokenService tokenService;
 
     @PostMapping("register")
     @Transactional
@@ -27,20 +32,27 @@ public class CategoryController {
             URI uri = uriBuilder.path("register/category/{id}").buildAndExpand(newCategoryId).toUri();
             return ResponseEntity.created(uri).body(new CategoryDTO(newCategory));
         } catch (ValidationException e){
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(new ValidationExceptionDTO(e.getMessage()));
         }
 
     }
 
     @PostMapping("register-user-created")
     @Transactional
-    public ResponseEntity<CategoryDTO> registerCategoryCreatedByUser(@RequestBody CategoryRegisterCreatedByUserDTO categoryRegisterCreatedByUserData, UriComponentsBuilder uriBuilder){
-        Category newCategory = categoryService.registerCategoryCreatedByUser(categoryRegisterCreatedByUserData);
-        Integer newCategoryId = newCategory.getIdCategory();
+    public ResponseEntity registerCategoryCreatedByUser(@RequestBody CategoryRegisterDTO categoryRegisterCreatedByUserData, UriComponentsBuilder uriBuilder, @RequestHeader HttpHeaders headers){
+        try {
+            Integer idUser = tokenService.recoverIdFromToken(headers);
+            Category newCategory = categoryService.registerCategoryCreatedByUser(categoryRegisterCreatedByUserData, idUser);
 
-        URI uri = uriBuilder.path("register/category/{id}").buildAndExpand(newCategoryId).toUri();
+            Integer newCategoryId = newCategory.getIdCategory();
 
-        return ResponseEntity.created(uri).body(new CategoryDTO(newCategory));
+            URI uri = uriBuilder.path("register/category/{id}").buildAndExpand(newCategoryId).toUri();
+
+            return ResponseEntity.created(uri).body(new CategoryDTO(newCategory));
+        }catch (ValidationException e){
+            return ResponseEntity.badRequest().body(new ValidationExceptionDTO(e.getMessage()));
+        }
+
     }
 
     @GetMapping("/{idUser}")
@@ -53,7 +65,6 @@ public class CategoryController {
         List<CategoryDTO> categorys = temp.stream().map(c -> new CategoryDTO((Category) c)).toList();
 
         return ResponseEntity.ok().body(categorys);
-
     }
 
 
