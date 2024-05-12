@@ -13,12 +13,9 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idCategory;
 
-    @NotNull
-    @NotBlank
     @Column(length = 512)
     private String name;
 
-    @NotNull
     private boolean active;
 
     @ManyToOne
@@ -39,7 +36,7 @@ public class Category {
         this.active = true;
     }
 
-    public Category(CategoryRegisterCreatedByUserDTO categoryRegisterDTO, User user){
+    public Category(CategoryRegisterDTO categoryRegisterDTO, User user){
         this.name = categoryRegisterDTO.name();
         this.active = true;
         this.user = user;
