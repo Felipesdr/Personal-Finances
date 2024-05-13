@@ -25,7 +25,7 @@ public class User implements UserDetails {
     private String password;
     @NotNull @NotNull @NotBlank @Column(length = 11, unique = true)
     private String cpf;
-    @NotNull
+    @NotNull @Enumerated(EnumType.STRING)
     private UserRole role;
 
     public User() {
@@ -139,5 +139,15 @@ public class User implements UserDetails {
     @Override
     public int hashCode() {
         return Objects.hash(getIdUser());
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "idUser=" + idUser +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", cpf='" + cpf + '\'' +
+                '}';
     }
 }
