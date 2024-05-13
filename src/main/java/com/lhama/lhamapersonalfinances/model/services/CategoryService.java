@@ -1,9 +1,10 @@
 package com.lhama.lhamapersonalfinances.model.services;
 
-import com.lhama.lhamapersonalfinances.infra.exception.ValidationException;
 import com.lhama.lhamapersonalfinances.infra.security.TokenService;
 import com.lhama.lhamapersonalfinances.model.entities.category.*;
 import com.lhama.lhamapersonalfinances.model.entities.user.User;
+import com.lhama.lhamapersonalfinances.model.entities.user.UserRole;
+import com.lhama.lhamapersonalfinances.model.entities.validations.CategoryValidator;
 import com.lhama.lhamapersonalfinances.model.entities.validations.RequestValidations;
 import com.lhama.lhamapersonalfinances.model.repositorys.CategoryRepository;
 import com.lhama.lhamapersonalfinances.model.repositorys.UserRepository;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class CategoryService {
@@ -20,61 +20,41 @@ public class CategoryService {
     @Autowired
     UserRepository userRepository;
     @Autowired
-    TokenService tokenService;
+    CategoryValidator categoryValidator;
 
-    public Category registerGlobalCategory(CategoryRegisterDTO categoryRegisterData){
-        RequestValidations.validateNullDTO(categoryRegisterData);
+    public Category registerCategory(CategoryRegisterDTO categoryRegisterData, Integer idUser) {
+        categoryValidator.categoryAlreadyExistsValidation(categoryRegisterData.name());
 
-        if(categoryRepository.existsByNameAndActiveTrue(categoryRegisterData.name())){
-            throw new ValidationException("Category already exists");
-        }
-
-        Category newCategory = new Category(categoryRegisterData);
-        newCategory.setIdCategory(null);
-        newCategory = categoryRepository.save(newCategory);
-        return newCategory;
-    }
-
-    public Category registerCategoryCreatedByUser(CategoryRegisterDTO categoryRegisterCreatedByUserData, Integer idUser){
-        RequestValidations.validateNullDTO(categoryRegisterCreatedByUserData);
-
-        if(categoryRepository.existsByNameAndActiveTrue(categoryRegisterCreatedByUserData.name())){
-            throw new ValidationException("Category already exists");
-        }
-
-        User user =  userRepository.findById(idUser).get();
-        Category newCategory = new Category(categoryRegisterCreatedByUserData, user);
+        User user = userRepository.findById(idUser).get();
+        Category newCategory = new Category(categoryRegisterData, user);
         newCategory = categoryRepository.save(newCategory);
 
         return newCategory;
     }
 
-    public List<Category> getAllCategoryByIdUserAndGlobal(Integer idUser){
-        User user = userRepository.findById(idUser).orElseThrow();
-
-       return categoryRepository.findAllByUserAndActiveTrueOrUserIsNullAndActiveTrue(user);
+    public List<Category> getAllCategoryByIdUserAndGlobal(Integer idUser) {
+        User user = userRepository.findById(idUser).get();
+        return categoryRepository.findAllByUserOrUserRoleAndActiveTrue(user, UserRole.ADMIN);
     }
 
-    public Category updateCategoryById(CategoryUpdateDTO categoryUpdateData){
+    public Category updateCategoryById(CategoryUpdateDTO categoryUpdateData, Integer idRequestingUser) {
         Category updatedCategory = categoryRepository.getReferenceById(categoryUpdateData.idCategory());
+        User categoryUser = userRepository.getReferenceById(updatedCategory.getUser().getIdUser());
+        RequestValidations.idUserValidation(idRequestingUser, categoryUser.getIdUser());
+        categoryValidator.categoryAlreadyBeenDeactivated(categoryUpdateData.idCategory());
+        categoryValidator.categoryAlreadyExistsValidation(categoryUpdateData.name());
+
         updatedCategory.updateCategory(categoryUpdateData);
         return updatedCategory;
-
     }
 
-    public void deactivateCategoryCreatedByUserById(CategoryDeactivateDTO categoryDeactivateData){
-        if(categoryDeactivateData.idUser() != null){
-            Category deactivatedCategory = categoryRepository.getReferenceById(categoryDeactivateData.idCategory());
+    public void deactivateCategoryCreatedByUserById(Integer idCategory, Integer idRequestingUser) {
+        Category deactivatedCategory = categoryRepository.getReferenceById(idCategory);
+        User categoryUser = userRepository.getReferenceById(deactivatedCategory.getUser().getIdUser());
+        RequestValidations.idUserValidation(idRequestingUser, categoryUser.getIdUser());
+        categoryValidator.categoryAlreadyBeenDeactivated(idCategory);
 
-            if(Objects.equals(deactivatedCategory.getUser().getIdUser(), categoryDeactivateData.idUser())){
-                deactivatedCategory.deactivateCategory();
-            }
-        }
+        deactivatedCategory.deactivateCategory();
+        categoryRepository.save(deactivatedCategory);
     }
-
-    public void deactivateGlobalCategory(Integer idCategory){
-        Category deactivatedGlobalCategory = categoryRepository.getReferenceById(idCategory);
-        deactivatedGlobalCategory.deactivateCategory();
-    }
-
 }
