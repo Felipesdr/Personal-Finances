@@ -17,8 +17,8 @@ public class CategoryValidator {
         }
     }
 
-    public void categoryAlreadyBeenDeactivated(Integer id){
-        Category category = categoryRepository.getReferenceById(id);
+    public void categoryAlreadyBeenDeactivated(Long idCategory){
+        Category category = categoryRepository.getReferenceById(idCategory);
         if(!category.isActive()) throw new ValidationException("Category is already deactivated");
     }
 }
