@@ -1,10 +1,8 @@
 package com.lhama.lhamapersonalfinances.controllers;
 
-import com.lhama.lhamapersonalfinances.infra.exception.ValidationException;
-import com.lhama.lhamapersonalfinances.infra.exception.ValidationExceptionDTO;
 import com.lhama.lhamapersonalfinances.infra.security.TokenService;
 import com.lhama.lhamapersonalfinances.model.entities.category.*;
-import com.lhama.lhamapersonalfinances.model.entities.validations.RequestValidations;
+import com.lhama.lhamapersonalfinances.model.entities.validations.RequestValidator;
 import com.lhama.lhamapersonalfinances.model.services.CategoryService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -28,7 +26,7 @@ public class CategoryController {
     @PostMapping("register")
     @Transactional
     public ResponseEntity registerCategory(@Valid @RequestBody CategoryRegisterDTO categoryRegisterData, UriComponentsBuilder uriBuilder, @RequestHeader HttpHeaders headers){
-            RequestValidations.validateNullDTO(categoryRegisterData);
+            RequestValidator.validateNullDTO(categoryRegisterData);
             Long idUser = tokenService.recoverIdFromToken(headers);
             Category newCategory = categoryService.registerCategory(categoryRegisterData, idUser);
 
@@ -52,7 +50,7 @@ public class CategoryController {
     @PutMapping("update")
     @Transactional
     public ResponseEntity updateCategoryById(@Valid @RequestBody CategoryUpdateDTO categoryUpdateData, @RequestHeader HttpHeaders headers){
-            RequestValidations.validateNullDTO(categoryUpdateData);
+            RequestValidator.validateNullDTO(categoryUpdateData);
             Long idRequestingUser = tokenService.recoverIdFromToken(headers);
             Category updatedCategory = categoryService.updateCategoryById(categoryUpdateData, idRequestingUser);
 
@@ -61,7 +59,7 @@ public class CategoryController {
 
     @DeleteMapping("deactivate/{idCategory}")
     public ResponseEntity deactivateCategoryById(@Valid @PathVariable Long idCategory, @RequestHeader HttpHeaders headers){
-            RequestValidations.validateNullDTO(idCategory);
+            RequestValidator.validateNullDTO(idCategory);
             Long idRequestingUSer = tokenService.recoverIdFromToken(headers);
             categoryService.deactivateCategoryCreatedByUserById(idCategory, idRequestingUSer);
 
