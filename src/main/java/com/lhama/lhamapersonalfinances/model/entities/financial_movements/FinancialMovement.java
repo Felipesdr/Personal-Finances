@@ -1,4 +1,4 @@
-package com.lhama.lhamapersonalfinances.model.entities.expense;
+package com.lhama.lhamapersonalfinances.model.entities.financial_movements;
 
 import com.lhama.lhamapersonalfinances.model.entities.category.Category;
 import com.lhama.lhamapersonalfinances.model.entities.user.User;
@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
-public class Expense {
+public class FinancialMovement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idExpense;
@@ -23,10 +23,10 @@ public class Expense {
     private User user;
     private boolean active;
 
-    public Expense() {
+    public FinancialMovement() {
     }
 
-    public Expense(Long idExpense, String name, LocalDateTime date, Double value, Category category, User user) {
+    public FinancialMovement(Long idExpense, String name, LocalDateTime date, Double value, Category category, User user) {
         this.idExpense = idExpense;
         this.name = name;
         this.date = date;
@@ -36,7 +36,16 @@ public class Expense {
         this.active = true;
     }
 
-    public Long getIdExpense() {
+    public FinancialMovement(FinancialMovementRegisterDTO financialMovementRegisterDTO, Category category, User user){
+        this.name = financialMovementRegisterDTO.name();
+        this.date = financialMovementRegisterDTO.date();
+        this.value = financialMovementRegisterDTO.value();
+        this.category = category;
+        this.user = user;
+        this.active = true;
+    }
+
+    public Long getIdFinancialMovement() {
         return idExpense;
     }
 
@@ -91,12 +100,12 @@ public class Expense {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Expense expense)) return false;
-        return Objects.equals(getIdExpense(), expense.getIdExpense());
+        if (!(o instanceof FinancialMovement financialMovement)) return false;
+        return Objects.equals(getIdFinancialMovement(), financialMovement.getIdFinancialMovement());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getIdExpense());
+        return Objects.hash(getIdFinancialMovement());
     }
 }
