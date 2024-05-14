@@ -11,7 +11,7 @@ import java.util.Objects;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idCategory;
+    private Long idCategory;
 
     @Column(length = 512)
     private String name;
@@ -25,10 +25,11 @@ public class Category {
     public Category() {
     }
 
-    public Category(Integer idCategory, String name, Boolean active) {
+    public Category(Long idCategory, String name, Boolean active, User user) {
         this.idCategory = idCategory;
         this.name = name;
         this.active = active;
+        this.user = user;
     }
 
     public Category(CategoryRegisterDTO categoryRegisterDTO){
@@ -42,11 +43,11 @@ public class Category {
         this.user = user;
     }
 
-    public Integer getIdCategory() {
+    public Long getIdCategory() {
         return idCategory;
     }
 
-    public void setIdCategory(Integer idCategory) {
+    public void setIdCategory(Long idCategory) {
         this.idCategory = idCategory;
     }
 

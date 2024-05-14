@@ -50,7 +50,7 @@ public class AuthenticationController {
 
         if (newUser == null) return ResponseEntity.internalServerError().build();
 
-        Integer idNewUser = newUser.getIdUser();
+        Long idNewUser = newUser.getIdUser();
 
         URI uri = uriBuilder.path("auth/register/{id}").buildAndExpand(idNewUser).toUri();
 

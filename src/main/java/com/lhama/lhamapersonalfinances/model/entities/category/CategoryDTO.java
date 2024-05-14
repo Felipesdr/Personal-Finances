@@ -3,9 +3,9 @@ package com.lhama.lhamapersonalfinances.model.entities.category;
 import com.lhama.lhamapersonalfinances.model.entities.user.User;
 import jakarta.annotation.Nullable;
 
-public record CategoryDTO(Integer idCategory, String name, boolean active,
+public record CategoryDTO(Long idCategory, String name, boolean active,
                           @Nullable
-                          Integer idUser){
+                          Long idUser){
 
     public CategoryDTO(Category category){
         this(

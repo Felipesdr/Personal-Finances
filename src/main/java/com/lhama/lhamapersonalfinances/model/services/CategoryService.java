@@ -22,22 +22,22 @@ public class CategoryService {
     @Autowired
     CategoryValidator categoryValidator;
 
-    public Category registerCategory(CategoryRegisterDTO categoryRegisterData, Integer idUser) {
+    public Category registerCategory(CategoryRegisterDTO categoryRegisterData, Long idUser) {
         categoryValidator.categoryAlreadyExistsValidation(categoryRegisterData.name());
 
-        User user = userRepository.findById(idUser).get();
+        User user = userRepository.getReferenceById(idUser);
         Category newCategory = new Category(categoryRegisterData, user);
         newCategory = categoryRepository.save(newCategory);
 
         return newCategory;
     }
 
-    public List<Category> getAllCategoryByIdUserAndGlobal(Integer idUser) {
-        User user = userRepository.findById(idUser).get();
+    public List<Category> getAllCategoryByIdUserAndGlobal(Long idUser) {
+        User user = userRepository.getReferenceById(idUser);
         return categoryRepository.findAllByUserOrUserRoleAndActiveTrue(user, UserRole.ADMIN);
     }
 
-    public Category updateCategoryById(CategoryUpdateDTO categoryUpdateData, Integer idRequestingUser) {
+    public Category updateCategoryById(CategoryUpdateDTO categoryUpdateData, Long idRequestingUser) {
         Category updatedCategory = categoryRepository.getReferenceById(categoryUpdateData.idCategory());
         User categoryUser = userRepository.getReferenceById(updatedCategory.getUser().getIdUser());
         RequestValidations.idUserValidation(idRequestingUser, categoryUser.getIdUser());
@@ -48,7 +48,7 @@ public class CategoryService {
         return updatedCategory;
     }
 
-    public void deactivateCategoryCreatedByUserById(Integer idCategory, Integer idRequestingUser) {
+    public void deactivateCategoryCreatedByUserById(Long idCategory, Long idRequestingUser) {
         Category deactivatedCategory = categoryRepository.getReferenceById(idCategory);
         User categoryUser = userRepository.getReferenceById(deactivatedCategory.getUser().getIdUser());
         RequestValidations.idUserValidation(idRequestingUser, categoryUser.getIdUser());

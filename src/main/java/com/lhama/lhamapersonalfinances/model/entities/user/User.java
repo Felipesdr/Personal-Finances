@@ -16,7 +16,7 @@ import java.util.Objects;
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idUser;
+    private Long idUser;
     @NotNull @NotBlank @Column(length = 512)
     private String name;
     @NotNull @NotBlank @Column(length = 512) @Email
@@ -31,7 +31,7 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(Integer idUser, String name, String email, String password, String cpf, UserRole role) {
+    public User(Long idUser, String name, String email, String password, String cpf, UserRole role) {
         this.idUser = idUser;
         this.name = name;
         this.email = email;
@@ -49,12 +49,8 @@ public class User implements UserDetails {
         this.role = UserRole.USER;
     }
 
-    public Integer getIdUser() {
+    public Long getIdUser() {
         return idUser;
-    }
-
-    public void setIdUser(Integer idUser) {
-        this.idUser = idUser;
     }
 
     public String getName() {

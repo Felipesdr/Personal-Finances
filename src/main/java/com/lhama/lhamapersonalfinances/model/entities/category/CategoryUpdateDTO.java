@@ -1,4 +1,11 @@
 package com.lhama.lhamapersonalfinances.model.entities.category;
 
-public record CategoryUpdateDTO(Integer idCategory, String name) {
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+public record CategoryUpdateDTO(
+        @NotNull
+        Long idCategory,
+        @NotNull @NotBlank
+        String name) {
 }

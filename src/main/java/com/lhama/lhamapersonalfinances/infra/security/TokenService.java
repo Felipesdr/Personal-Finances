@@ -48,18 +48,18 @@ public class TokenService {
     private Instant generateExpirationDate(){
         return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
     }
-    public Integer recoverIdFromToken(HttpHeaders header) {
+    public Long recoverIdFromToken(HttpHeaders header) {
         String token = header.get("Authorization").get(0);
         String jwt = token.replace("Bearer ", "");
         Algorithm algorithm = Algorithm.HMAC256(secret);
 
         try {
-            Integer idUser = JWT.require(algorithm)
+            Long idUser = JWT.require(algorithm)
                     .withIssuer("lhama-personal-finances")
                     .build()
                     .verify(jwt)
                     .getClaim("idUser")
-                    .asInt();
+                    .asLong();
             return idUser;
         } catch (JWTVerificationException exception){
             return null;

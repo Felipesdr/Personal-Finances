@@ -8,14 +8,12 @@ import org.springframework.http.HttpHeaders;
 import java.util.Objects;
 
 public class RequestValidations {
-    @Autowired
-    static TokenService tokenService;
 
     public static <T> void validateNullDTO(T dto) {
         if(dto == null) throw new ValidationException("The request body data cannot be null");
     }
 
-    public static void idUserValidation(Integer idRequestingUser, Integer idUser){
+    public static void idUserValidation(Long idRequestingUser, Long idUser){
         if(!Objects.equals(idUser, idRequestingUser)) throw new ValidationException("Can´t do this for another user");
     }
 }
