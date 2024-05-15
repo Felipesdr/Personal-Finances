@@ -11,7 +11,7 @@ import java.util.Objects;
 public class FinancialMovement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idExpense;
+    private Long idFinancialMovement;
     private String name;
     private LocalDateTime date;
     private Double value;
@@ -26,8 +26,8 @@ public class FinancialMovement {
     public FinancialMovement() {
     }
 
-    public FinancialMovement(Long idExpense, String name, LocalDateTime date, Double value, Category category, User user) {
-        this.idExpense = idExpense;
+    public FinancialMovement(Long idFinancialMovement, String name, LocalDateTime date, Double value, Category category, User user) {
+        this.idFinancialMovement = idFinancialMovement;
         this.name = name;
         this.date = date;
         this.value = value;
@@ -46,7 +46,7 @@ public class FinancialMovement {
     }
 
     public Long getIdFinancialMovement() {
-        return idExpense;
+        return idFinancialMovement;
     }
 
     public String getName() {
@@ -107,5 +107,25 @@ public class FinancialMovement {
     @Override
     public int hashCode() {
         return Objects.hash(getIdFinancialMovement());
+    }
+
+    public void update(FinancialMovementUpdateDTO movementUpdateData){
+        if(movementUpdateData.name() != null){
+            this.name = movementUpdateData.name();
+        }
+        if(movementUpdateData.date() != null){
+            this.date = movementUpdateData.date();
+        }
+        if(movementUpdateData.value() != null){
+            this.value = movementUpdateData.value();
+        }
+    }
+
+    public void updateCategory(Category category){
+        this.category = category;
+    }
+
+    public void deactivate(){
+        this.active = false;
     }
 }
