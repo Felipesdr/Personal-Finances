@@ -39,6 +39,7 @@ public class CategoryService {
     public Category updateCategoryById(CategoryUpdateDTO categoryUpdateData, Long idRequestingUser) {
         Category updatedCategory = categoryRepository.getReferenceById(categoryUpdateData.idCategory());
         User categoryUser = userRepository.getReferenceById(updatedCategory.getUser().getIdUser());
+
         RequestValidator.idUserValidation(idRequestingUser, categoryUser.getIdUser());
         categoryValidator.categoryAlreadyBeenDeactivated(categoryUpdateData.idCategory());
         categoryValidator.categoryAlreadyExistsValidation(categoryUpdateData.name());
