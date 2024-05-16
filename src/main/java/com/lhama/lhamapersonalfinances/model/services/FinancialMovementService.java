@@ -76,4 +76,10 @@ public class FinancialMovementService {
         if(monthlyBalance == null) return 0.0;
         return monthlyBalance;
     }
+
+    public Double getUserMonthlyTotalByCategory(Long idUser, Long idCategory, Integer year, Integer month){
+        financialMovementValidator.idCategoryUserValidation(idUser, idCategory);
+
+        return financialMovementRepository.getUserMonthlyTotalByCategory(idUser, idCategory, year, month);
+    }
 }
