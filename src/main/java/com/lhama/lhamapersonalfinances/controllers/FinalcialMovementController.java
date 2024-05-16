@@ -62,7 +62,7 @@ public class FinalcialMovementController {
 
         Double monthlyExpenses = financialMovementService.getUserTotalMonthlyExpenses(tokenService.recoverIdFromToken(headers), year, month);
 
-        return ResponseEntity.ok(new FinancialMovementValueDTO(monthlyExpenses));
+        return ResponseEntity.ok(new FinancialMovementTotalValueDTO(monthlyExpenses));
     }
 
     @GetMapping("monthly-income")
@@ -72,7 +72,7 @@ public class FinalcialMovementController {
 
         Double monthlyExpenses = financialMovementService.getUserTotalMonthlyIncomes(tokenService.recoverIdFromToken(headers), year, month);
 
-        return ResponseEntity.ok(new FinancialMovementValueDTO(monthlyExpenses));
+        return ResponseEntity.ok(new FinancialMovementTotalValueDTO(monthlyExpenses));
     }
 
     @GetMapping("monthly-balance")
@@ -82,6 +82,17 @@ public class FinalcialMovementController {
 
         Double monthlyBalance = financialMovementService.getUserMonthlyBalance(tokenService.recoverIdFromToken(headers), year, month);
 
-        return ResponseEntity.ok(new FinancialMovementValueDTO(monthlyBalance));
+        return ResponseEntity.ok(new FinancialMovementTotalValueDTO(monthlyBalance));
+    }
+
+    @GetMapping("monthly-total")
+    public ResponseEntity getUserMonthlyTotalByCategory(@RequestParam Integer year, @RequestParam Long idCategory, @RequestParam Integer month, @RequestHeader HttpHeaders headers){
+        RequestValidator.validateNullRequest(year);
+        RequestValidator.validateNullRequest(month);
+        RequestValidator.validateNullRequest(idCategory);
+
+        Double monthlyTotalByCategory = financialMovementService.getUserMonthlyTotalByCategory(tokenService.recoverIdFromToken(headers), idCategory,  year, month);
+
+        return ResponseEntity.ok(new FinancialMovementTotalValueDTO(monthlyTotalByCategory));
     }
 }
