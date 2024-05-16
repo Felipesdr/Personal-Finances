@@ -22,18 +22,21 @@ public class FinancialMovement {
     @JoinColumn(name = "id_user", referencedColumnName = "idUser")
     private User user;
     private boolean active;
+    @Enumerated(EnumType.STRING)
+    private FinancialMovementType type;
 
     public FinancialMovement() {
     }
 
-    public FinancialMovement(Long idFinancialMovement, String name, LocalDateTime date, Double value, Category category, User user) {
+    public FinancialMovement(Long idFinancialMovement, String name, LocalDateTime date, Double value, Category category, User user, boolean active, FinancialMovementType type) {
         this.idFinancialMovement = idFinancialMovement;
         this.name = name;
         this.date = date;
         this.value = value;
         this.category = category;
         this.user = user;
-        this.active = true;
+        this.active = active;
+        this.type = type;
     }
 
     public FinancialMovement(FinancialMovementRegisterDTO financialMovementRegisterDTO, Category category, User user){
@@ -42,6 +45,7 @@ public class FinancialMovement {
         this.value = financialMovementRegisterDTO.value();
         this.category = category;
         this.user = user;
+        this.type = financialMovementRegisterDTO.type();
         this.active = true;
     }
 
@@ -97,6 +101,14 @@ public class FinancialMovement {
         this.active = active;
     }
 
+    public FinancialMovementType getType() {
+        return type;
+    }
+
+    public void setType(FinancialMovementType type) {
+        this.type = type;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -107,6 +119,20 @@ public class FinancialMovement {
     @Override
     public int hashCode() {
         return Objects.hash(getIdFinancialMovement());
+    }
+
+    @Override
+    public String toString() {
+        return "FinancialMovement{" +
+                "idFinancialMovement=" + idFinancialMovement +
+                ", name='" + name + '\'' +
+                ", date=" + date +
+                ", value=" + value +
+                ", category=" + category +
+                ", user=" + user +
+                ", active=" + active +
+                ", type=" + type +
+                '}';
     }
 
     public void update(FinancialMovementUpdateDTO movementUpdateData){

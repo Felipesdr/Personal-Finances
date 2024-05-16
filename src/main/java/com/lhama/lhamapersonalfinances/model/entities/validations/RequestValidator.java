@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class RequestValidator {
 
-    public static <T> void validateNullDTO(T dto) {
+    public static <T> void validateNullRequest(T dto) {
         if(dto == null) throw new ValidationException("The request body data cannot be null");
     }
 
