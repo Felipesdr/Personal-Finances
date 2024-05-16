@@ -47,4 +47,13 @@ public interface FinancialMovementRepository extends JpaRepository<FinancialMove
             )
             """, nativeQuery = true)
     Double getUserMonthlyBalance(Long idUser, Integer year, Integer month);
+
+    @Query(value = """
+            select SUM(fm.value) from financial_movement fm
+            where fm.id_user = :idUser
+            and fm.id_category = :idCategory
+            and YEAR(fm.date) = :year
+            and MONTH(fm.date) = :month
+            """, nativeQuery = true)
+    Double getUserMonthlyTotalByCategory(Long idUser, Long idCategory, Integer year, Integer month);
 }
