@@ -26,7 +26,7 @@ public class CategoryController {
     @PostMapping("register")
     @Transactional
     public ResponseEntity registerCategory(@Valid @RequestBody CategoryRegisterDTO categoryRegisterData, UriComponentsBuilder uriBuilder, @RequestHeader HttpHeaders headers){
-            RequestValidator.validateNullDTO(categoryRegisterData);
+            RequestValidator.validateNullRequest(categoryRegisterData);
             Long idUser = tokenService.recoverIdFromToken(headers);
             Category newCategory = categoryService.registerCategory(categoryRegisterData, idUser);
 
@@ -50,7 +50,7 @@ public class CategoryController {
     @PutMapping("update")
     @Transactional
     public ResponseEntity updateCategoryById(@Valid @RequestBody CategoryUpdateDTO categoryUpdateData, @RequestHeader HttpHeaders headers){
-            RequestValidator.validateNullDTO(categoryUpdateData);
+            RequestValidator.validateNullRequest(categoryUpdateData);
             Long idRequestingUser = tokenService.recoverIdFromToken(headers);
             Category updatedCategory = categoryService.updateCategoryById(categoryUpdateData, idRequestingUser);
 
@@ -59,7 +59,7 @@ public class CategoryController {
 
     @DeleteMapping("deactivate/{idCategory}")
     public ResponseEntity deactivateCategoryById(@Valid @PathVariable Long idCategory, @RequestHeader HttpHeaders headers){
-            RequestValidator.validateNullDTO(idCategory);
+            RequestValidator.validateNullRequest(idCategory);
             Long idRequestingUSer = tokenService.recoverIdFromToken(headers);
             categoryService.deactivateCategoryCreatedByUserById(idCategory, idRequestingUSer);
 
