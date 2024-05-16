@@ -1,10 +1,7 @@
 package com.lhama.lhamapersonalfinances.controllers;
 
 import com.lhama.lhamapersonalfinances.infra.security.TokenService;
-import com.lhama.lhamapersonalfinances.model.entities.financial_movements.FinancialMovement;
-import com.lhama.lhamapersonalfinances.model.entities.financial_movements.FinancialMovementDTO;
-import com.lhama.lhamapersonalfinances.model.entities.financial_movements.FinancialMovementRegisterDTO;
-import com.lhama.lhamapersonalfinances.model.entities.financial_movements.FinancialMovementUpdateDTO;
+import com.lhama.lhamapersonalfinances.model.entities.financial_movements.*;
 import com.lhama.lhamapersonalfinances.model.entities.validations.RequestValidator;
 import com.lhama.lhamapersonalfinances.model.services.FinancialMovementService;
 import jakarta.transaction.Transactional;
@@ -29,7 +26,7 @@ public class FinalcialMovementController {
     @PostMapping("register")
     @Transactional
     public ResponseEntity registerFinancialMovement(@RequestBody @Valid FinancialMovementRegisterDTO movementRegisterData, UriComponentsBuilder uriBuilder, @RequestHeader HttpHeaders header){
-        RequestValidator.validateNullDTO(movementRegisterData);
+        RequestValidator.validateNullRequest(movementRegisterData);
 
         FinancialMovement newFinancialMovement = financialMovementService.registerFinancialMovement(movementRegisterData, tokenService.recoverIdFromToken(header));
         Long idMovement = newFinancialMovement.getIdFinancialMovement();
@@ -41,7 +38,7 @@ public class FinalcialMovementController {
     @PutMapping("update")
     @Transactional
     public ResponseEntity updateFinancialMovement(@RequestBody @Valid FinancialMovementUpdateDTO movementUpdateData, @RequestHeader HttpHeaders header){
-        RequestValidator.validateNullDTO(movementUpdateData);
+        RequestValidator.validateNullRequest(movementUpdateData);
 
         FinancialMovement updatedMovement = financialMovementService.updateFinancialMovement(movementUpdateData, tokenService.recoverIdFromToken(header));
 
@@ -51,10 +48,40 @@ public class FinalcialMovementController {
     @DeleteMapping("deactivate/{idMovement}")
     @Transactional
     public ResponseEntity deactivateFinsncialMovement(@PathVariable Long idMovement, @RequestHeader HttpHeaders header){
-        RequestValidator.validateNullDTO(idMovement);
+        RequestValidator.validateNullRequest(idMovement);
 
         financialMovementService.deactivateFinancialMovement(idMovement, tokenService.recoverIdFromToken(header));
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("monthly-expense")
+    public ResponseEntity getUserTotalMonthlyExpenses(@RequestParam Integer year, @RequestParam Integer month, @RequestHeader HttpHeaders headers){
+        RequestValidator.validateNullRequest(year);
+        RequestValidator.validateNullRequest(month);
+
+        Double monthlyExpenses = financialMovementService.getUserTotalMonthlyExpenses(tokenService.recoverIdFromToken(headers), year, month);
+
+        return ResponseEntity.ok(new FinancialMovementValueDTO(monthlyExpenses));
+    }
+
+    @GetMapping("monthly-income")
+    public ResponseEntity getUserTotalMonthlyIncomes(@RequestParam Integer year, @RequestParam Integer month, @RequestHeader HttpHeaders headers){
+        RequestValidator.validateNullRequest(year);
+        RequestValidator.validateNullRequest(month);
+
+        Double monthlyExpenses = financialMovementService.getUserTotalMonthlyIncomes(tokenService.recoverIdFromToken(headers), year, month);
+
+        return ResponseEntity.ok(new FinancialMovementValueDTO(monthlyExpenses));
+    }
+
+    @GetMapping("monthly-balance")
+    public ResponseEntity getUserMonthlyBalance(@RequestParam Integer year, @RequestParam Integer month, @RequestHeader HttpHeaders headers){
+        RequestValidator.validateNullRequest(year);
+        RequestValidator.validateNullRequest(month);
+
+        Double monthlyBalance = financialMovementService.getUserMonthlyBalance(tokenService.recoverIdFromToken(headers), year, month);
+
+        return ResponseEntity.ok(new FinancialMovementValueDTO(monthlyBalance));
     }
 }
