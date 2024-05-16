@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Positive;
 import java.time.LocalDateTime;
 
 public record FinancialMovementRegisterDTO(
+        @NotNull
+        FinancialMovementType type,
         @NotNull @NotBlank
         String name,
         @NotNull
