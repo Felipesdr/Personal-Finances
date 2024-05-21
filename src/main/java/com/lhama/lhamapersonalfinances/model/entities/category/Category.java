@@ -1,5 +1,6 @@
 package com.lhama.lhamapersonalfinances.model.entities.category;
 
+import com.lhama.lhamapersonalfinances.model.entities.financial_movements.FinancialMovementType;
 import com.lhama.lhamapersonalfinances.model.entities.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -22,14 +23,18 @@ public class Category {
     @JoinColumn(name = "id_user", referencedColumnName = "idUser")
     private User user;
 
+    @Enumerated(EnumType.STRING)
+    private FinancialMovementType type;
+
     public Category() {
     }
 
-    public Category(Long idCategory, String name, Boolean active, User user) {
+    public Category(Long idCategory, String name, Boolean active, User user, FinancialMovementType type) {
         this.idCategory = idCategory;
         this.name = name;
         this.active = active;
         this.user = user;
+        this.type = type;
     }
 
     public Category(CategoryRegisterDTO categoryRegisterDTO){
@@ -40,6 +45,7 @@ public class Category {
     public Category(CategoryRegisterDTO categoryRegisterDTO, User user){
         this.name = categoryRegisterDTO.name();
         this.active = true;
+        this.type = categoryRegisterDTO.type();
         this.user = user;
     }
 
@@ -73,6 +79,14 @@ public class Category {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public FinancialMovementType getType() {
+        return type;
+    }
+
+    public void setType(FinancialMovementType type) {
+        this.type = type;
     }
 
     @Override
