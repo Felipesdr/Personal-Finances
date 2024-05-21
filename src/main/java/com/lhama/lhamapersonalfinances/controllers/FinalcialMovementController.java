@@ -7,12 +7,16 @@ import com.lhama.lhamapersonalfinances.model.services.FinancialMovementService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("movement")
@@ -85,7 +89,7 @@ public class FinalcialMovementController {
         return ResponseEntity.ok(new FinancialMovementTotalValueDTO(monthlyBalance));
     }
 
-    @GetMapping("monthly-total")
+    @GetMapping("monthly-total-category")
     public ResponseEntity getUserMonthlyTotalByCategory(@RequestParam Integer year, @RequestParam Long idCategory, @RequestParam Integer month, @RequestHeader HttpHeaders headers){
         RequestValidator.validateNullRequest(year);
         RequestValidator.validateNullRequest(month);
@@ -94,5 +98,23 @@ public class FinalcialMovementController {
         Double monthlyTotalByCategory = financialMovementService.getUserMonthlyTotalByCategory(tokenService.recoverIdFromToken(headers), idCategory,  year, month);
 
         return ResponseEntity.ok(new FinancialMovementTotalValueDTO(monthlyTotalByCategory));
+    }
+
+    @GetMapping("monthly-movements-category")
+    public ResponseEntity getAllUserMonthlyFinancialMovementsByCategory(@RequestParam Integer year, @RequestParam Long idCategory, @RequestParam Integer month, @RequestHeader HttpHeaders headers, @PageableDefault(sort = "date") Pageable pageable){
+        RequestValidator.validateNullRequest(year);
+        RequestValidator.validateNullRequest(month);
+        RequestValidator.validateNullRequest(idCategory);
+
+        Page<FinancialMovementDTO> page = financialMovementService.getAllUserMonthlyFinancialMovementsByCategory(tokenService.recoverIdFromToken(headers), idCategory,  year, month, pageable);
+
+        return ResponseEntity.ok(page);
+    }
+
+    @GetMapping("test")
+    public ResponseEntity getAllUserMonthlyTotalExpensesByCategory (@RequestParam Integer year, @RequestParam Integer month, @RequestHeader HttpHeaders headers){
+
+        List<FinancialMovementTotalByCategoryDTO> list = financialMovementService.getAllUserMonthlyTotalExpensesByCategory(tokenService.recoverIdFromToken(headers), year, month);
+        return ResponseEntity.ok(list);
     }
 }
