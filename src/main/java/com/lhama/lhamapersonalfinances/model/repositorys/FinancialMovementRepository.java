@@ -1,13 +1,13 @@
 package com.lhama.lhamapersonalfinances.model.repositorys;
 
 import com.lhama.lhamapersonalfinances.model.entities.financial_movements.FinancialMovement;
-import com.lhama.lhamapersonalfinances.model.entities.financial_movements.FinancialMovementType;
-import com.lhama.lhamapersonalfinances.model.entities.user.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.YearMonth;
 import java.util.List;
 
 @Repository
@@ -56,4 +56,23 @@ public interface FinancialMovementRepository extends JpaRepository<FinancialMove
             and MONTH(fm.date) = :month
             """, nativeQuery = true)
     Double getUserMonthlyTotalByCategory(Long idUser, Long idCategory, Integer year, Integer month);
+
+    @Query(value = """
+            select fm.* from financial_movement fm
+            where (fm.id_user = :idUser or fm.id_user = 3)
+            and YEAR(fm.date) = :year
+            and MONTH(fm.date) = :month
+            and fm.active = true
+            """, nativeQuery = true)
+    List<FinancialMovement> getAllUserMonthlyTotalByCategory(Long idUser, Integer year, Integer month);
+
+    @Query(value = """
+            select fm.* from financial_movement fm
+            where fm.id_user = :idUser
+            and fm.id_category = :idCategory
+            and YEAR(fm.date) = :year
+            and MONTH(fm.date) = :month
+            and fm.active = true
+            """, nativeQuery = true)
+    Page<FinancialMovement> getAllUserMonthlyFinancialMovementsByCategory(Long idUser, Long idCategory, Integer year, Integer month, Pageable pageable);
 }
