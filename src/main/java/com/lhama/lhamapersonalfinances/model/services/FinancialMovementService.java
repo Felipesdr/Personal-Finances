@@ -1,9 +1,7 @@
 package com.lhama.lhamapersonalfinances.model.services;
 
 import com.lhama.lhamapersonalfinances.model.entities.category.Category;
-import com.lhama.lhamapersonalfinances.model.entities.financial_movements.FinancialMovement;
-import com.lhama.lhamapersonalfinances.model.entities.financial_movements.FinancialMovementRegisterDTO;
-import com.lhama.lhamapersonalfinances.model.entities.financial_movements.FinancialMovementUpdateDTO;
+import com.lhama.lhamapersonalfinances.model.entities.financial_movements.*;
 import com.lhama.lhamapersonalfinances.model.entities.user.User;
 import com.lhama.lhamapersonalfinances.model.entities.validations.FinancialMovementValidator;
 import com.lhama.lhamapersonalfinances.model.entities.validations.RequestValidator;
@@ -11,9 +9,14 @@ import com.lhama.lhamapersonalfinances.model.repositorys.CategoryRepository;
 import com.lhama.lhamapersonalfinances.model.repositorys.FinancialMovementRepository;
 import com.lhama.lhamapersonalfinances.model.repositorys.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class FinancialMovementService {
@@ -81,5 +84,37 @@ public class FinancialMovementService {
         financialMovementValidator.idCategoryUserValidation(idUser, idCategory);
 
         return financialMovementRepository.getUserMonthlyTotalByCategory(idUser, idCategory, year, month);
+    }
+
+    public Page<FinancialMovementDTO> getAllUserMonthlyFinancialMovementsByCategory(Long idUser, Long idCategory, Integer year, Integer month, Pageable pageable){
+        financialMovementValidator.idCategoryUserValidation(idUser, idCategory);
+
+        Page page = financialMovementRepository.getAllUserMonthlyFinancialMovementsByCategory(idUser, idCategory, year, month, pageable);
+        return page.map(e-> new FinancialMovementDTO((FinancialMovement) e));
+    }
+
+    public List<FinancialMovementTotalByCategoryDTO> getAllUserMonthlyTotalExpensesByCategory(Long idUser, Integer year, Integer month){
+
+        List<FinancialMovement> allUserFinancialMovements = financialMovementRepository.getAllUserMonthlyTotalByCategory(idUser, year, month);
+        List<Long> categoryIds = new ArrayList<>();
+        List<FinancialMovementTotalByCategoryDTO> fmTotaByCategorylList = new ArrayList<>();
+
+        allUserFinancialMovements.forEach(fm-> {
+            if(!categoryIds.contains(fm.getCategory().getIdCategory())){
+                categoryIds.add(fm.getCategory().getIdCategory());
+            }
+        });
+
+        categoryIds.forEach(cm->{
+                Double totalByCategory = allUserFinancialMovements.stream()
+                        .filter(fm-> Objects.equals(fm.getCategory().getIdCategory(), cm))
+                        .mapToDouble(FinancialMovement::getValue)
+                        .sum();
+                var fm = categoryRepository.getReferenceById(cm);
+                var financialMovementTotalByCategory = new FinancialMovementTotalByCategoryDTO(cm, fm.getName(), totalByCategory, fm.getType());
+            fmTotaByCategorylList.add(financialMovementTotalByCategory);
+        });
+
+        return fmTotaByCategorylList;
     }
 }
