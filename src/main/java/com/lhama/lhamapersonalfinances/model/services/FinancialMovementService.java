@@ -28,6 +28,8 @@ public class FinancialMovementService {
     FinancialMovementRepository financialMovementRepository;
     @Autowired
     FinancialMovementValidator financialMovementValidator;
+    @Autowired
+    GoalService goalService;
 
     public FinancialMovement registerFinancialMovement(FinancialMovementRegisterDTO movementRegisterData, Long idUser) {
         financialMovementValidator.idCategoryUserValidation(idUser, movementRegisterData.idCategory());
@@ -35,6 +37,8 @@ public class FinancialMovementService {
         User user = userRepository.getReferenceById(idUser);
         Category category = categoryRepository.getReferenceById(movementRegisterData.idCategory());
         FinancialMovement newFinancialMovement = new FinancialMovement(movementRegisterData, category, user);
+
+        goalService.verifyGoalAfterInsertFm(newFinancialMovement, user);
 
         return financialMovementRepository.save(newFinancialMovement);
     }
