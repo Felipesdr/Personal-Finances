@@ -14,7 +14,11 @@ public class Goal {
     private Long idGoal;
     private String name;
     private Double value;
+    @ManyToOne
+    @JoinColumn(name = "id_user", referencedColumnName = "idUser")
     private User user;
+    @ManyToOne
+    @JoinColumn(name = "id_category", referencedColumnName = "idCategory")
     private Category category;
     private boolean active;
 
