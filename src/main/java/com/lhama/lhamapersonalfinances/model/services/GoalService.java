@@ -51,6 +51,20 @@ public class GoalService {
 
     }
 
+    public List<Goal> getAllUserGoals(Long idUser){
+        User user = userRepository.getReferenceById(idUser);
+        return goalRepository.findAllByUserAndActiveTrue(user);
+    }
+
+    public void deactivateGoal(Long idGoal, Long idRequestingUser){
+        Goal deactivatedGoal = goalRepository.getReferenceById(idGoal);
+        User goalUser = userRepository.getReferenceById(deactivatedGoal.getUser().getIdUser());
+
+        RequestValidator.idUserValidation(idRequestingUser, goalUser.getIdUser());
+
+        deactivatedGoal.deactivateGoal();
+    }
+
     public void verifyGoalAfterInsertFm(FinancialMovement financialMovement, User user){
         Goal goal = goalRepository.getGoalByCategoryAndIdUser(financialMovement.getCategory().getIdCategory(), user.getIdUser());
         if(goal != null){
