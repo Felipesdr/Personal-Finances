@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("goal")
@@ -50,5 +51,23 @@ public class GoalController {
         Goal updatedGoal = goalService.updateGoal(goalUpdateData, idRequestingUser);
 
         return ResponseEntity.ok(new GoalDTO(updatedGoal));
+    }
+
+    @GetMapping("goals")
+    public ResponseEntity getAllUserGoals(@RequestHeader HttpHeaders headers){
+        Long idRequestingUser = tokenService.recoverIdFromToken(headers);
+        List<Goal> userGoals = goalService.getAllUserGoals(idRequestingUser);
+        List<GoalDTO> userGoalsDTO = userGoals.stream().map(GoalDTO::new).toList();
+
+        return ResponseEntity.ok(userGoalsDTO);
+    }
+
+    @DeleteMapping("deactivate/{idGoal}")
+    @Transactional
+    public ResponseEntity deactivateGoal(@PathVariable Long idGoal, @RequestHeader HttpHeaders headers){
+        Long idRequestingUser = tokenService.recoverIdFromToken(headers);
+        goalService.deactivateGoal(idGoal, idRequestingUser);
+
+        return ResponseEntity.noContent().build();
     }
 }
