@@ -2,10 +2,7 @@ package com.lhama.lhamapersonalfinances.model.entities.goal;
 
 import com.lhama.lhamapersonalfinances.model.entities.category.Category;
 import com.lhama.lhamapersonalfinances.model.entities.user.User;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Goal {
@@ -64,6 +61,19 @@ public class Goal {
 
     public boolean isActive() {
         return active;
+    }
+
+    public void updateGoal(GoalUpdateDTO goalUpdateData){
+        if(goalUpdateData.name() != null){
+            this.name = goalUpdateData.name();
+        }
+        if(goalUpdateData.value() != null){
+            this.value = goalUpdateData.value();
+        }
+    }
+
+    public void deactivateGoal(){
+        this.active = false;
     }
 
 }
