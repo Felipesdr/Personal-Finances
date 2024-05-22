@@ -37,12 +37,12 @@ public class Category {
         this.type = type;
     }
 
-    public Category(CategoryRegisterDTO categoryRegisterDTO){
+    public Category(CategoryRegisterDTO categoryRegisterDTO) {
         this.name = categoryRegisterDTO.name();
         this.active = true;
     }
 
-    public Category(CategoryRegisterDTO categoryRegisterDTO, User user){
+    public Category(CategoryRegisterDTO categoryRegisterDTO, User user) {
         this.name = categoryRegisterDTO.name();
         this.active = true;
         this.type = categoryRegisterDTO.type();
@@ -111,15 +111,13 @@ public class Category {
                 '}';
     }
 
-    public void updateCategory(CategoryUpdateDTO categoryUpdateData){
-        if (categoryUpdateData != null){
+    public void updateCategory(CategoryUpdateDTO categoryUpdateData) {
+        if (categoryUpdateData != null) {
             this.name = categoryUpdateData.name();
         }
     }
 
-    public void deactivateCategory(){
-        if(idCategory != null){
-            this.active = false;
-        }
+    public void deactivateCategory() {
+        this.active = false;
     }
 }
