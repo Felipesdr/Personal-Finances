@@ -111,9 +111,8 @@ public class FinalcialMovementController {
         return ResponseEntity.ok(page);
     }
 
-    @GetMapping("test")
+    @GetMapping("all-totals-category")
     public ResponseEntity getAllUserMonthlyTotalExpensesByCategory (@RequestParam Integer year, @RequestParam Integer month, @RequestHeader HttpHeaders headers){
-
         List<FinancialMovementTotalByCategoryDTO> list = financialMovementService.getAllUserMonthlyTotalExpensesByCategory(tokenService.recoverIdFromToken(headers), year, month);
         return ResponseEntity.ok(list);
     }
