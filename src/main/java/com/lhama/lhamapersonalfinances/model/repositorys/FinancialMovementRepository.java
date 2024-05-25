@@ -19,6 +19,7 @@ public interface FinancialMovementRepository extends JpaRepository<FinancialMove
             and fm.type = "EXPENSE"
             and YEAR(fm.date) = :year
             and MONTH(fm.date) = :month
+            and fm.active = true
             """, nativeQuery = true)
     Double getUserTotalMonthlyExpenses(Long idUser, Integer year, Integer month);
 
