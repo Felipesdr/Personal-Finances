@@ -28,6 +28,7 @@ public interface FinancialMovementRepository extends JpaRepository<FinancialMove
             and fm.type = "INCOME"
             and YEAR(fm.date) = :year
             and MONTH(fm.date) = :month
+            and fm.active = true
             """, nativeQuery = true)
     Double getUserTotalMonthlyIncomes(Long idUser, Integer year, Integer month);
 
@@ -37,13 +38,15 @@ public interface FinancialMovementRepository extends JpaRepository<FinancialMove
                 where fm.id_user = :idUser
                 and fm.type = "INCOME"
                 and YEAR(fm.date) = :year
-                and MONTH(fm.date) = :month)
+                and MONTH(fm.date) = :month
+                and fm.active = true)
                 -
                 (select COALESCE(SUM(fm.value),0) from financial_movement fm
                 where fm.id_user = :idUser
                 and fm.type = "EXPENSE"
                 and YEAR(fm.date) = :year
-                and MONTH(fm.date) = :month)
+                and MONTH(fm.date) = :month
+                and fm.active = true)
             )
             """, nativeQuery = true)
     Double getUserMonthlyBalance(Long idUser, Integer year, Integer month);
@@ -54,6 +57,7 @@ public interface FinancialMovementRepository extends JpaRepository<FinancialMove
             and fm.id_category = :idCategory
             and YEAR(fm.date) = :year
             and MONTH(fm.date) = :month
+            and fm.active = true
             """, nativeQuery = true)
     Double getUserMonthlyTotalByCategory(Long idUser, Long idCategory, Integer year, Integer month);
 
