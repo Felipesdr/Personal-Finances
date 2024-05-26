@@ -3,6 +3,7 @@ package com.lhama.lhamapersonalfinances.model.services;
 import com.lhama.lhamapersonalfinances.model.entities.user.User;
 import com.lhama.lhamapersonalfinances.model.entities.user.UserRegisterDTO;
 import com.lhama.lhamapersonalfinances.model.repositorys.UserRepository;
+import com.lhama.lhamapersonalfinances.model.util.email.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,5 +30,11 @@ public class UserService {
         emailService.sendEmail(to, subject, body);
 
         return newUser;
+    }
+
+    public void changePassword(String newPassword, Long idUser){
+        User user = userRepository.getReferenceById(idUser);
+        user.changePassword(newPassword);
+        userRepository.save(user);
     }
 }
