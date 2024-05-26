@@ -121,10 +121,6 @@ public class User implements UserDetails {
         return cpf;
     }
 
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -145,5 +141,10 @@ public class User implements UserDetails {
                 ", email='" + email + '\'' +
                 ", cpf='" + cpf + '\'' +
                 '}';
+    }
+
+    public void changePassword(String newPassword){
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        this.password = encoder.encode(newPassword);
     }
 }
