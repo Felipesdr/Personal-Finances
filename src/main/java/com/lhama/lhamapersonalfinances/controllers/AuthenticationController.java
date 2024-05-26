@@ -2,10 +2,8 @@ package com.lhama.lhamapersonalfinances.controllers;
 
 import com.lhama.lhamapersonalfinances.infra.security.LoginResponseDTO;
 import com.lhama.lhamapersonalfinances.infra.security.TokenService;
-import com.lhama.lhamapersonalfinances.model.entities.user.User;
-import com.lhama.lhamapersonalfinances.model.entities.user.UserAuthenticationDTO;
-import com.lhama.lhamapersonalfinances.model.entities.user.UserDTO;
-import com.lhama.lhamapersonalfinances.model.entities.user.UserRegisterDTO;
+import com.lhama.lhamapersonalfinances.model.entities.user.*;
+import com.lhama.lhamapersonalfinances.model.entities.validations.RequestValidator;
 import com.lhama.lhamapersonalfinances.model.repositorys.UserRepository;
 import com.lhama.lhamapersonalfinances.model.services.UserService;
 import jakarta.transaction.Transactional;
