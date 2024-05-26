@@ -12,9 +12,22 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     public User registerUser(UserRegisterDTO userRegisterData) {
         if (userRepository.findByEmail(userRegisterData.email()) != null) return null;
 
-        return userRepository.save(new User(userRegisterData));
+        User newUser = userRepository.save(new User(userRegisterData));
+
+        String to = newUser.getEmail();
+        String subject = "Olá! Bem vindo ao Lhama Personal Finances!";
+        String body = "Olá "
+                + newUser.getName()
+                + " Você acaba de dar o primeiro passo para garantir sua saúde financeira! Bem vindo ao melhor aplicativo de gestão de finanças pessoais do mercado.";
+
+        emailService.sendEmail(to, subject, body);
+
+        return newUser;
     }
 }
