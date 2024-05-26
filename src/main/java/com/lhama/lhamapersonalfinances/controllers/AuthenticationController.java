@@ -8,15 +8,14 @@ import com.lhama.lhamapersonalfinances.model.entities.user.UserDTO;
 import com.lhama.lhamapersonalfinances.model.entities.user.UserRegisterDTO;
 import com.lhama.lhamapersonalfinances.model.repositorys.UserRepository;
 import com.lhama.lhamapersonalfinances.model.services.UserService;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -55,5 +54,15 @@ public class AuthenticationController {
         URI uri = uriBuilder.path("auth/register/{id}").buildAndExpand(idNewUser).toUri();
 
         return ResponseEntity.created(uri).body(new UserDTO(newUser));
+    }
+
+    @PostMapping("change-password")
+    @Transactional
+    public ResponseEntity changePassword(@RequestBody UserChangePasswordDTO userChangePasswordData, @RequestHeader HttpHeaders headers){
+        RequestValidator.validateNullRequest(userChangePasswordData);
+
+        userService.changePassword(userChangePasswordData.newPassword(), tokenService.recoverIdFromToken(headers));
+
+        return ResponseEntity.ok().build();
     }
 }
