@@ -12,12 +12,15 @@ public class EmailService {
         this.mailSender = mailSender;
     }
 
-    public void sendEmail(Email email){
+    public void sendEmail(String to, String subject, String body){
+        Email email = new Email(to, subject, body);
+
         var message = new SimpleMailMessage();
         message.setFrom("lhama_personal_finances@lhama.com");
         message.setTo(email.to());
         message.setSubject(email.subject());
         message.setText(email.body());
+
         mailSender.send(message);
     }
 }

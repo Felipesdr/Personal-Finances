@@ -84,8 +84,8 @@ public class GoalService {
                        + " em exatamente R$ "
                        + ((categoryTotal + financialMovement.getValue()) - goal.getValue())
                        + " Hora de tirar a mão do bolso e colocar na consciência ";
-               Email email = new Email(to, subject, body);
-               emailService.sendEmail(email);
+
+               emailService.sendEmail(to, subject, body);
            }
         }
     }
